@@ -1,0 +1,27 @@
+﻿1. Para Hacer Migration - Code First
+	Instalar librerias necesarias (Version: 3.1.2 para todas):
+		Microsoft.EntityFrameworkCore
+		Microsoft.EntityFrameworkCore.Tools
+		Microsoft.EntityFrameworkCore.Design
+		Microsoft.EntityFrameworkCore.SqlServe -> Driver para BD postgres
+
+2. crear el contexto y las clase entidaddes y agregarlas al startup
+
+3.instalar drive migracion.
+	dotnet tool install --global dotnet-ef --version 3.1.2  (en el cmd general como administrador)
+   
+   --crear el archivo de migracion, se le indica nombre y nombre del proyecto
+   dotnet ef migrations add MigracionSqlServerInicial --project TiendaServicios.Api.Libro
+   --actualizar la DB a partir del archivo de migracion. Ejecuta los scipts que estan en la carpeta migrations
+   dotnet ef database update --project TiendaServicios.Api.Libro
+
+4. Implememtar patron CQRS. Libreria mediatr
+	--instalar mediatr
+	MediatR.Extensions.Microsoft.DependencyInjection (8.0.0)
+
+5. Instalar driver para validaciones
+	FluentValidation.AspNetCore (8.6.2)
+
+6. Para manejar objetos Dto, se puede usar automapper, para pasar de objetos entidad de la BD a Dto.
+	AutoMapper.Extensions.Microsoft.DependencyInjection (6.1.1)
+	

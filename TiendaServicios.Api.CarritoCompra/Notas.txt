@@ -1,0 +1,44 @@
+﻿1. Para Hacer Migration - Code First
+	Instalar librerias necesarias (Version: 3.1.2 para todas):
+		Microsoft.EntityFrameworkCore
+		Microsoft.EntityFrameworkCore.Tools
+		Microsoft.EntityFrameworkCore.Design
+		Mysql.Data.EntityFrameworkCore -> Driver para BD Mysql
+
+2. crear el contexto y las clase entidades y agregarlas al startup
+
+3. Agregar variable de entorno para mysql,cmd -> C:\Program Files\MySQL\MySQL Server 8.0\bin
+
+4. Ubicarse en el motor. comando: mysql -u root -p 
+	PASS: root12345
+	create database carritocompra;
+	SHOW tables -> Ver tablas en mysql
+
+	En Mysql Se debe crear la tabla de migracion:
+	create table __EFMigrationsHistory(
+    -> MigrationId varchar(150) not null primary key,
+    -> ProductVersion varchar(32) not null
+    -> );
+
+5.instalar drive migracion.
+	dotnet tool install --global dotnet-ef --version 3.1.2  (en el cmd general como administrador)
+   
+   --crear el archivo de migracion, se le indica nombre y nombre del proyecto
+   dotnet ef migrations add MigracionMySqlInicial --project TiendaServicios.Api.CarritoCompra
+   --actualizar la DB a partir del archivo de migracion. Ejecuta los scipts que estan en la carpeta migrations
+   dotnet ef database update --project TiendaServicios.Api.CarritoCompra
+   --borrar las migraciones de un proyecto
+   dotnet ef migrations remove  --project TiendaServicios.Api.CarritoCompra
+
+6. Implememtar patron CQRS. Libreria mediatr
+	--instalar mediatr
+	MediatR.Extensions.Microsoft.DependencyInjection (8.0.0)
+
+7. Instalar driver para validaciones
+	FluentValidation.AspNetCore (8.6.2)
+
+8. Para manejar objetos Dto, se puede usar automapper, para pasar de objetos entidad de la BD a Dto.
+	AutoMapper.Extensions.Microsoft.DependencyInjection (6.1.1)
+
+9. Usar httpCLient
+	
