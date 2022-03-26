@@ -12,7 +12,7 @@ namespace TiendaServicios.Api.Autor.Aplicacion
 {
     public class ConsultaFiltro
     {
-        public class AutorUnico : IRequest<AutorLibroDto> 
+        public class AutorUnico : IRequest<AutorLibroDto>
         {
             public string AutorGuid { get; set; }
         }
