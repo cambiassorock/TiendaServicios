@@ -1,0 +1,112 @@
+﻿#Comandos varios docker:
+	docker -v (version de docker)
+	docker image list (lista de imagenes instaladas)
+	docker pull nginx:1.18.0 (instalar una imagen)
+	docker rmi nombreimagen (eliminar imagen)
+	docker run -it nombreImagen  (levantar un contenedor de una imagen)
+	docker container list (listar contenedores que se estan ejecutando)
+	docker exit(detener contenedor)
+	docker container list -a (historico de ejecuciones d econtenedores que se han estado creando)
+	docker rm elcontainerid
+    docker stop postgres-tiendaservicios (detener contenedor)
+	docker start postgres-tiendaservicios (iniciar contenedor)
+	docker network create microservicenet (crear red)
+	docker network list(listar redes creadas)
+	docker network inspect microservicenet  (conteniers agregados a una red)
+
+#POSTGRES
+
+1. Bajar el servicio local de postgress para no tener problemas cuando se monte el contenedor.
+	services.msc -> postgres
+
+2. Instalar imagen de postgres (la ultima)
+	docker pull postgres:latest
+
+3. levantar container a partir de imagen postgress
+	docker run --name postgres-tiendaservicios -e POSTGRES_PASSWORD=root12345 -d -p 5432:5432 postgres:latest
+
+4. ingresar al contenedor
+	docker exec -it postgres-tiendaservicios bash
+
+5. Iniciar sesion de postgress
+	psql -U postgres
+
+6. perfiles y crear bd:
+	\du (mostrar permisos)
+	create database tiendalibroautor (crear la BD)
+	\l (bds creadas)
+	\c tiendalibroautor (conectar a al BD)
+	\d (consultar tablas creadas de la bd)
+
+7. vincular la bd del contenedor con el codigo del microservicio: TiendaServicios.Api.Autor 
+	Realizar migration - Code Firts.
+	
+#Servicio Autor Libro -> POSTGRES
+	Armar archivo Compose.
+
+8. crear red para los microservicios.
+	docker network create microservicenet
+	docker network list
+
+9. agregar microservicio a la red.
+	docker network connect microservicenet postgres-tiendaservicios 
+
+10. agregar en el archivo compose del microservicio autorlibro, agregarlo a la red, recien creada.
+
+
+#SQLSERVER
+
+1. Desactivar el sql server expreess, se va manadar a un contenedor.
+	services.msc -> sqlServer
+
+2. Instalar imagen de SqlServerExpress
+	docker pull mcr.microsoft.com/mssql/server:latest
+
+3.  levantar container a partir de imagen sqlserver
+	docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=root12345" -p 1433:1433 -d mcr.microsoft.com/mssql/server:latest
+
+4. se debe agregar el contenedor a la red que se creo anteriormente(microservicenet)
+	docker network connect microservicenet charming_raman 
+
+5. agregar en el archivo compose del microservicio libro
+
+6. agregar microservicio libro a la red, recien creada.microservicenet
+
+7. Tener en cuenta para cuando se vaya hacer la migracion entrar a la carpeta del proyecto.
+
+
+#MYSQL
+
+1. Desactivar el sql server expreess, se va manadar a un contenedor.
+	services.msc -> Mysql
+
+2. Instalar imagen de Mysql
+	docker pull mysql:latest
+
+3.  levantar container a partir de imagen mysql
+	docker run --name mysql-tiendaservicios -d -p 3360:3306 -e MYSQL_ROOT_PASSWORD=root12345 mysql:latest
+
+4. Conectarnos al contenedor.
+	docker exec -it mysql-tiendaservicios bash
+
+5. Conectarnos a la BD mysql dentro del contenedor
+	mysql -uroot -proot12345
+
+6. crear base de datos.
+	create database carritocompra;
+
+	En Mysql Se debe crear la tabla de migracion:
+	create table __EFMigrationsHistory(
+		MigrationId varchar(150) not null primary key,
+		ProductVersion varchar(32) not null
+	);
+
+
+7. se debe agregar el contenedor a la red que se creo anteriormente(microservicenet)
+	docker network connect microservicenet mysql-tiendaservicios 
+
+8. agregar en el archivo compose del microservicio Carrito
+
+9. agregar microservicio Carrito a la red, recien creada.microservicenet
+
+10. Tener en cuenta para cuando se vaya hacer la migracion entrar a la carpeta del proyecto.

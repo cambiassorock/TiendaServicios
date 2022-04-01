@@ -24,4 +24,5 @@
 
 6. Para manejar objetos Dto, se puede usar automapper, para pasar de objetos entidad de la BD a Dto.
 	AutoMapper.Extensions.Microsoft.DependencyInjection (6.1.1)
+
 	
