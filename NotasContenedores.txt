@@ -110,3 +110,19 @@
 9. agregar microservicio Carrito a la red, recien creada.microservicenet
 
 10. Tener en cuenta para cuando se vaya hacer la migracion entrar a la carpeta del proyecto.
+
+
+#RabbitMQ 
+
+1. Instalr imagen de RabbitMQ:
+	docker pull rabbitmq
+
+2. levantar contenedor de RabbitMQ:
+	docker run -d --hostname mi-rabbit-server --name rabbit-tiendaservicios rabbitmq:3
+
+3. instalar plugin para interfaz grafia para RabbitMQ:
+	docker run -d --hostname mi-rabbit-server --name rabbit-tiendaservicios-web -p 15672:15672 rabbitmq:3-management
+
+4. ingresar a la interfaz grafica RabbitMQ:
+	http://localhost:15672/
+	usuario y contraseña: guest

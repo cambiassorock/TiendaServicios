@@ -1,0 +1,103 @@
+{
+  "Routes": [
+    //configurar Libro
+    {
+      "DownstreamPathTemplate": "/api/libro",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tiendaservicios.api.libro",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/LibroGateWay",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "key": "LibroTotal" //para la agregacion
+    },
+    {
+      "DownstreamPathTemplate": "/api/libro/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tiendaservicios.api.libro",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/LibroGateWay/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+
+      //agregar comportamiento con HttpMessageHandler
+      "DelegatingHandlers": [
+        "LibroHandler"
+      ]
+    },
+
+    //configuar Autor
+    {
+      "DownstreamPathTemplate": "/api/autor",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tiendaservicios.api.autor",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/AutorGateWay",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT" ],
+      "key": "AutorTotal" //para la agregacion
+    },
+    {
+      "DownstreamPathTemplate": "/api/autor/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tiendaservicios.api.autor",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/AutorGateWay/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    },
+
+    //configuar Carrito compras
+    {
+      "DownstreamPathTemplate": "/api/carritocompras",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tiendaservicios.api.carritocompra",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/CarritoGateWay",
+      "UpstreamHttpMethod": [ "GET", "POST" ]
+    },
+    {
+      "DownstreamPathTemplate": "/api/carritocompras/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tiendaservicios.api.carritocompra",
+          "Port": "80"
+        }
+      ],
+      "UpstreamPathTemplate": "/CarritoGateWay/{id}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ]
+    }
+
+  ],
+
+  //crear endpoint de agregador, de libro y autor, solo para metodos tipo GET. los 
+  "Aggregates": [
+    {
+      "RouteKeys": [
+        "AutorTotal",
+        "LibroTotal"
+      ],
+      //endpoint de cara al cliente
+      "UpstreamPathTemplate": "/LibroAutorGateWay"
+    }
+  ]
+
+
+}
