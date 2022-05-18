@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using TiendaServicios.Api.Libro.Modelo;
 using TiendaServicios.Api.Libro.Persistencia;
+using TiendaServicios.RabbitMQ.Bus.BusRabbit;
+using TiendaServicios.RabbitMQ.Bus.EventoQueue;
 
 namespace TiendaServicios.Api.Libro.Aplicacion
 {
@@ -35,9 +37,11 @@ namespace TiendaServicios.Api.Libro.Aplicacion
         {
 
             private readonly ContextoLibro _contexto;
+            private readonly IRabbitEventBus _eventBus;
 
-            public Manejador(ContextoLibro contexto) {
+            public Manejador(ContextoLibro contexto, IRabbitEventBus eventBus) {
                 _contexto = contexto;
+                _eventBus = eventBus;
             }
 
             //implemnetado del padre IRequestHandler. Devuelve un valor 1->exitoso o 0 errores
@@ -51,6 +55,9 @@ namespace TiendaServicios.Api.Libro.Aplicacion
 
                 _contexto.LibroMaterial.Add(libroMaterial);
                 var valor = await _contexto.SaveChangesAsync();
+
+                //agregamos el mensaje al Tubo Rabbit Bus
+                _eventBus.Publish(new EmailEventoQueue("cambiassorock@gmail.com", request.Titulo, "Este es un Ejemplo"));
 
                 if (valor > 0)
                     return Unit.Value;

@@ -1,4 +1,4 @@
-﻿1. Para Hacer Poder converit App en Gateway
+﻿1. Para Hacer Poder convertir App en Gateway
 	Agregar paquete Ocelot 16.0.1
 
 2. Modificar Startup con la inclusion de Ocelot

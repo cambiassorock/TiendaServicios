@@ -1,0 +1,116 @@
+﻿using MediatR;
+using Newtonsoft.Json;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TiendaServicios.RabbitMQ.Bus.BusRabbit;
+using TiendaServicios.RabbitMQ.Bus.Comandos;
+using TiendaServicios.RabbitMQ.Bus.Eventos;
+
+namespace TiendaServicios.RabbitMQ.Bus.Implement
+{
+    public class RabbitEventBus : IRabbitEventBus
+    {
+        private readonly IMediator _mediator;
+        private readonly Dictionary<string, List<Type>> _manejadores;
+        private readonly List<Type> _eventoTipos;
+
+        public RabbitEventBus(IMediator mediator)
+        {
+            _mediator = mediator;
+            _manejadores = new Dictionary<string, List<Type>>();
+            _eventoTipos = new List<Type>();
+        }
+
+        public Task EnviarComando<T>(T comando) where T : Comando
+        {
+            return _mediator.Send(comando);
+        }
+
+        public void Publish<T>(T evento) where T : Evento
+        {
+            //var factory = new ConnectionFactory() { HostName = "localhost" };
+
+            var factory = new ConnectionFactory() { HostName = "rabbit-tiendaservicios-web" };
+            using (var connection = factory.CreateConnection())
+            using (var channel = connection.CreateModel())
+            {
+                var eventName = evento.GetType().Name;
+                channel.QueueDeclare(eventName, false, false, false, null);
+
+                var message = JsonConvert.SerializeObject(evento);
+                var body = Encoding.UTF8.GetBytes(message);
+
+                channel.BasicPublish("", eventName, null, body);
+            }
+        }
+
+        public void Suscribe<T, TH>() where T : Evento
+                                      where TH : IEventoManejador<T>
+        {
+            var eventName = typeof(T).Name;
+            var manejadorEventoTipo = typeof(TH);
+
+            if (!_eventoTipos.Contains(typeof(T)))
+                _eventoTipos.Add(typeof(T));
+
+            if (!_manejadores.ContainsKey(eventName))
+                _manejadores.Add(eventName, new List<Type>());
+
+            if (_manejadores[eventName].Any(x => x.GetType() == manejadorEventoTipo))
+                throw new ArgumentException($"EL manejador {manejadorEventoTipo.Name} fue registrado anteriormente por {eventName}");
+
+            _manejadores[eventName].Add(manejadorEventoTipo);
+
+            var factory = new ConnectionFactory()
+            {
+                HostName = "rabbit-tiendaservicios-web",
+                DispatchConsumersAsync = true
+            };
+
+            var connection = factory.CreateConnection();
+            var channel = connection.CreateModel();
+            channel.QueueDeclare(eventName, false, false, false, null);
+
+            var consumer = new AsyncEventingBasicConsumer(channel);
+            consumer.Received += Consumer_Delegate;
+
+            channel.BasicConsume(eventName,true, consumer);
+        }
+
+        private async Task Consumer_Delegate(object sender, BasicDeliverEventArgs e)
+        {
+            var eventName = e.RoutingKey;
+            var message = Encoding.UTF8.GetString(e.Body.ToArray());
+
+            try
+            {
+                if (_manejadores.ContainsKey(eventName))
+                {
+                     var suscriptions = _manejadores[eventName];
+                    foreach(var sb in suscriptions)
+                    {
+                        var manejador = Activator.CreateInstance(sb);
+
+                        if (manejador == null) continue;
+
+                        var tipoEvento = _eventoTipos.SingleOrDefault(x => x.Name == eventName);
+                        var eventoDS = JsonConvert.DeserializeObject(message,tipoEvento);
+
+                        var concretoTipo = typeof(IEventoManejador<>).MakeGenericType(tipoEvento);
+
+                        await (Task) concretoTipo.GetMethod("Handle").Invoke(manejador,new object[] { eventoDS});
+                    }
+                }
+            }
+            catch (Exception ex)
+            { 
+
+            }
+        }
+    }
+}

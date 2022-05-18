@@ -1,0 +1,13 @@
+﻿1. Libreria mediatr
+	--instalar mediatr
+	MediatR (8.0.0)
+
+2. Instalar libreria para conexion con RabbitMQ
+	RabbitMQ.Client (6.1.0)
+
+3.Instalar Newtonsoft.Json (12.03)
+
+4. Se incluye el proyecto como dependencia de las APis que lo quieran utilizar.
+
+5. Se agregan en el stratup del Api, la clase que realiza todo.
+	 services.AddTransient<IRabbitEventBus, RabbitEventBus>();

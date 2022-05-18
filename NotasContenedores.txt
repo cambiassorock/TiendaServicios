@@ -105,16 +105,19 @@
 7. se debe agregar el contenedor a la red que se creo anteriormente(microservicenet)
 	docker network connect microservicenet mysql-tiendaservicios 
 
-8. agregar en el archivo compose del microservicio Carrito
+#microservicio Carrito
 
-9. agregar microservicio Carrito a la red, recien creada.microservicenet
+1. agregar en el archivo compose del microservicio Carrito
 
-10. Tener en cuenta para cuando se vaya hacer la migracion entrar a la carpeta del proyecto.
+2. agregar microservicio Carrito a la red, recien creada.microservicenet
+	docker network connect microservicenet TiendaServicios.Api.Gateway
+
+3. Tener en cuenta para cuando se vaya hacer la migracion entrar a la carpeta del proyecto.
 
 
 #RabbitMQ 
 
-1. Instalr imagen de RabbitMQ:
+1. Instalr imagen de RabbitMQ (Producer->EventBus->RabbitMQ->Consumer): 
 	docker pull rabbitmq
 
 2. levantar contenedor de RabbitMQ:
@@ -123,6 +126,10 @@
 3. instalar plugin para interfaz grafia para RabbitMQ:
 	docker run -d --hostname mi-rabbit-server --name rabbit-tiendaservicios-web -p 15672:15672 rabbitmq:3-management
 
-4. ingresar a la interfaz grafica RabbitMQ:
+4. ingresar a la interfaz grafica RabbitMQ: Entrar al contenedor y utilizar guest, lo trabaja por defecto.
 	http://localhost:15672/
 	usuario y contraseña: guest
+
+5. Agregar Micorservicio de RAbbit MQ a la red
+		docker network connect microservicenet rabbit-tiendaservicios
+		docker network connect microservicenet rabbit-tiendaservicios-web 

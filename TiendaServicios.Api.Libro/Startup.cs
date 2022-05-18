@@ -15,6 +15,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using TiendaServicios.Api.Libro.Aplicacion;
 using TiendaServicios.Api.Libro.Persistencia;
+using TiendaServicios.RabbitMQ.Bus.BusRabbit;
+using TiendaServicios.RabbitMQ.Bus.Implement;
 
 namespace TiendaServicios.Api.Libro
 {
@@ -45,6 +47,10 @@ namespace TiendaServicios.Api.Libro
 
             //para poder usar Mapper con injeccion
             services.AddAutoMapper(typeof(Consulta.Manejador).Assembly);
+
+            //Para poder utilizar Rabbit MQ Event, del proyecto RabbitMQ.Bus. 
+            services.AddTransient<IRabbitEventBus, RabbitEventBus>(); //con esto ya se puede injectar dentro de cualquier clase.
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

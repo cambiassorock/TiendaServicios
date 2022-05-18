@@ -14,7 +14,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TiendaServicios.Api.Autor.Aplicacion;
+using TiendaServicios.Api.Autor.ManejadorRabbit;
 using TiendaServicios.Api.Autor.Persistencia;
+using TiendaServicios.RabbitMQ.Bus.BusRabbit;
+using TiendaServicios.RabbitMQ.Bus.EventoQueue;
+using TiendaServicios.RabbitMQ.Bus.Implement;
 
 namespace TiendaServicios.Api.Autor
 {
@@ -43,6 +47,12 @@ namespace TiendaServicios.Api.Autor
 
             //para poder usar Mapper con injeccion
             services.AddAutoMapper(typeof(Consulta.Manejador).Assembly);
+
+            //Para poder utilizar Rabbit MQ Event, del proyecto RabbitMQ.Bus. 
+            services.AddTransient<IRabbitEventBus, RabbitEventBus>(); //con esto ya se puede injectar dentro de cualquier clase.
+
+            //Para poder utilizar Rabbit MQ Event, para escuchar en el tubo, y tomar el mensaje evento
+            services.AddTransient<IEventoManejador<EmailEventoQueue>, EmailEventoManejador>(); //con esto ya se puede injectar dentro de cualquier clase.
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,6 +71,10 @@ namespace TiendaServicios.Api.Autor
             {
                 endpoints.MapControllers();
             });
+
+            //Para poder utilizar Rabbit MQ Event, para escuchar en el tubo, y tomar el mensaje evento.
+            var eventBus = app.ApplicationServices.GetRequiredService<IRabbitEventBus>();
+            eventBus.Suscribe<EmailEventoQueue, EmailEventoManejador>();
         }
     }
 }
