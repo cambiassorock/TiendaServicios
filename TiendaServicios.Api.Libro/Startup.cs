@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using TiendaServicios.Api.Libro.Aplicacion;
 using TiendaServicios.Api.Libro.Persistencia;
 using TiendaServicios.RabbitMQ.Bus.BusRabbit;
+using TiendaServicios.RabbitMQ.Bus.EventoQueue;
 using TiendaServicios.RabbitMQ.Bus.Implement;
 
 namespace TiendaServicios.Api.Libro
@@ -49,7 +50,13 @@ namespace TiendaServicios.Api.Libro
             services.AddAutoMapper(typeof(Consulta.Manejador).Assembly);
 
             //Para poder utilizar Rabbit MQ Event, del proyecto RabbitMQ.Bus. 
-            services.AddTransient<IRabbitEventBus, RabbitEventBus>(); //con esto ya se puede injectar dentro de cualquier clase.
+            //services.AddTransient<IRabbitEventBus, RabbitEventBus>(); //con esto ya se puede injectar dentro de cualquier clase.
+
+            //Para poder utilizar Rabbit MQ Event, del proyecto RabbitMQ.Bus. 
+            services.AddSingleton<IRabbitEventBus, RabbitEventBus>(sp => {
+                var scoperFactory = sp.GetRequiredService<IServiceScopeFactory>();
+                return new RabbitEventBus(sp.GetService<IMediator>(), scoperFactory);
+            }); //con esto ya se puede injectar dentro de cualquier clase.
 
         }
 

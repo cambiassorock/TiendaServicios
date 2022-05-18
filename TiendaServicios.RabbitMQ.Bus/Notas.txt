@@ -11,3 +11,8 @@
 
 5. Se agregan en el stratup del Api, la clase que realiza todo.
 	 services.AddTransient<IRabbitEventBus, RabbitEventBus>();
+
+6. Instalar  para injectar dependencias
+	Microsoft.Extensions.DependencyInjection (3.1.7)
+	
+	

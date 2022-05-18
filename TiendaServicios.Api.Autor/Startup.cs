@@ -49,7 +49,11 @@ namespace TiendaServicios.Api.Autor
             services.AddAutoMapper(typeof(Consulta.Manejador).Assembly);
 
             //Para poder utilizar Rabbit MQ Event, del proyecto RabbitMQ.Bus. 
-            services.AddTransient<IRabbitEventBus, RabbitEventBus>(); //con esto ya se puede injectar dentro de cualquier clase.
+            services.AddSingleton<IRabbitEventBus, RabbitEventBus>(sp => {
+                var scoperFactory = sp.GetRequiredService<IServiceScopeFactory>();
+                return new RabbitEventBus(sp.GetService<IMediator>(), scoperFactory);
+            }); //con esto ya se puede injectar dentro de cualquier clase.
+            services.AddTransient<EmailEventoManejador>();
 
             //Para poder utilizar Rabbit MQ Event, para escuchar en el tubo, y tomar el mensaje evento
             services.AddTransient<IEventoManejador<EmailEventoQueue>, EmailEventoManejador>(); //con esto ya se puede injectar dentro de cualquier clase.
