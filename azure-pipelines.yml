@@ -21,6 +21,7 @@ stages :
   - job: FirtsJob
     steps:
     - bash: echo Empieza Build
+    - bash: echo Mi Variable:$(PipeLineLeveVariables)
     - task: NuGetToolInstaller@1
     - task: NuGetCommand@2
       inputs:
