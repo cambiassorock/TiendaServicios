@@ -44,6 +44,11 @@ stages :
   - job: DevDeployJob
     steps:
     - bash: echo Empieza Deploy en Desarrollo
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'ejecutables'
+        publishLocation: 'Container'
 
 - stage: QADeploy
   jobs:
