@@ -75,6 +75,10 @@ stages :
         scannerMode: 'MSBuild'
         projectKey: 'TiendaServicios_Azure'
         projectName: 'TiendaServicios_Azure'
+    - task: SonarCloudAnalyze@1
+    - task: SonarCloudPublish@1
+      inputs:
+        pollingTimeoutSec: '300'
   - job: SnykSecurityJob
     steps:
     - bash: echo Empieza Validacion SnykSecurity
@@ -86,6 +90,7 @@ stages :
         failOnIssues: false
         projectName: 'TiendaServicios_Azure'
         organization: '5759043e-df6e-4931-85e7-906499b01fc5'
+      
     
 - stage: QADeploy
   jobs:
