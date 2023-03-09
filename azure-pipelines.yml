@@ -74,7 +74,7 @@ stages :
         organization: 'cambiassorockazuredevsecops'
         scannerMode: 'MSBuild'
         projectKey: 'cambiassorock_TiendaServicios'
-        projectName: 'TiendaServicios'
+        projectName: 'TiendaServicios_Azure'
   - job: SnykSecurityJob
     steps:
     - bash: echo Empieza Validacion SnykSecurity
@@ -84,6 +84,7 @@ stages :
         testType: 'app'
         monitorWhen: 'always'
         failOnIssues: true
+        projectName: 'TiendaServicios_Azure'
         organization: '6f035e18-560a-443e-90c4-d66669f19fec'
     
 - stage: QADeploy
