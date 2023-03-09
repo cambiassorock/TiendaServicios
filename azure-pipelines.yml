@@ -18,7 +18,7 @@ variables:
 stages :
 - stage: Build
   jobs:
-  - job: FirtsJob
+  - job: Compile
     steps:
     - bash: echo Empieza Build
     - bash: echo Mi Variable:$(PipeLineLeveVariables)
@@ -41,11 +41,8 @@ stages :
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)'
-        Contents: '**'
+        Contents: 'WebApp.zip'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
-        CleanTargetFolder: true
-        OverWrite: true
-        ignoreMakeDirErrors: true
 
 - stage: DevDeploy
   #dependsOn: Build
