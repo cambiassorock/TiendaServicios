@@ -85,7 +85,7 @@ stages :
         monitorWhen: 'always'
         failOnIssues: true
         projectName: 'TiendaServicios_Azure'
-        organization: '6f035e18-560a-443e-90c4-d66669f19fec'
+        organization: '5759043e-df6e-4931-85e7-906499b01fc5'
     
 - stage: QADeploy
   jobs:
