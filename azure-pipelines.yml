@@ -43,6 +43,11 @@ stages :
         SourceFolder: '$(System.DefaultWorkingDirectory)'
         Contents: '**/*.zip'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'drop'
+        publishLocation: 'Container'
 
 - stage: DevDeploy
   #dependsOn: Build
@@ -57,11 +62,6 @@ stages :
     - bash: echo $(Build.SourcesDirectory)
     - bash: echo $(System.DefaultWorkingDirectory)
     - bash: echo $(Build.ArtifactStagingDirectory)
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'drop'
-        publishLocation: 'Container'
 - stage: QADeploy
   jobs:
   - job: QADeployJob
