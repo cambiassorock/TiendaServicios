@@ -69,19 +69,6 @@ stages :
     steps:
     - bash: echo Empieza Deploy en Calidad
 
-- stage: PreProdDeploy
-  dependsOn: Build
-  jobs:
-  - job: run_test
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - download: current
-      artifact: drop
-    - task: PowerShell@2
-      inputs:
-        filePath: '$(Pipeline.Workspace)\drop\TiendaServicios.Api.Autor\Notas.txt'
-
 - stage: ProdDeploy
   jobs:
   - job: QADeployJob
