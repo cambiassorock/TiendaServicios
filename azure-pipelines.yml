@@ -63,14 +63,18 @@ stages :
     - bash: echo $(System.DefaultWorkingDirectory)
     - bash: echo $(Build.ArtifactStagingDirectory)
 
-- stage: ExcecuteSonarCloud
+- stage: ExecuteSonarCloud
   jobs:
   - job: QADeployJob
     steps:
     - bash: echo Empieza Validacion SonarCloud
-    - script: |
-        mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=cambiassorockazuredevsecops -Dsonar.projectKey=cambiassorockazuredevsecops_azuredevsecops -Dsonar.login=$(tokenSonarCloud)
-      displayName: "Integrate SAST using SonarCloud in Azure DevOps Pipeline"  
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'ConexionSonarCloud'
+        organization: 'cambiassorockazuredevsecops'
+        scannerMode: 'MSBuild'
+        projectKey: 'cambiassorock_TiendaServicios'
+        projectName: 'cambiassorock'
 
 - stage: QADeploy
   jobs:
