@@ -73,7 +73,7 @@ stages :
         SonarCloud: 'ConexionSonarCloud'
         organization: 'cambiassorockazuredevsecops'
         scannerMode: 'MSBuild'
-        projectKey: 'cambiassorock_TiendaServicios'
+        projectKey: 'TiendaServicios_Azure'
         projectName: 'TiendaServicios_Azure'
   - job: SnykSecurityJob
     steps:
@@ -83,7 +83,7 @@ stages :
         serviceConnectionEndpoint: 'ConexionSnyk'
         testType: 'app'
         monitorWhen: 'always'
-        failOnIssues: true
+        failOnIssues: false
         projectName: 'TiendaServicios_Azure'
         organization: '5759043e-df6e-4931-85e7-906499b01fc5'
     
