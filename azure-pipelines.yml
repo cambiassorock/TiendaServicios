@@ -50,7 +50,7 @@ stages :
         publishLocation: 'Container'
 
 - stage: DevDeploy
-  #dependsOn: Build
+  dependsOn: Build
   jobs:
   - job: DevDeployJob
     steps:
@@ -62,11 +62,25 @@ stages :
     - bash: echo $(Build.SourcesDirectory)
     - bash: echo $(System.DefaultWorkingDirectory)
     - bash: echo $(Build.ArtifactStagingDirectory)
+
 - stage: QADeploy
   jobs:
   - job: QADeployJob
     steps:
     - bash: echo Empieza Deploy en Calidad
+
+- stage: PreProdDeploy
+  dependsOn: Build
+  jobs:
+  - job: run_test
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - download: current
+      artifact: drop
+    - task: PowerShell@2
+      inputs:
+        filePath: '$(Pipeline.Workspace)\drop\TiendaServicios.Api.Autor\Notas.txt'
 
 - stage: ProdDeploy
   jobs:
