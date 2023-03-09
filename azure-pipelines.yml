@@ -41,7 +41,7 @@ stages :
     - task: CopyFiles@2
       inputs:
         SourceFolder: '$(System.DefaultWorkingDirectory)'
-        Contents: 'WebApp.zip'
+        Contents: '**/*.zip'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
 - stage: DevDeploy
