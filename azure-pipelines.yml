@@ -74,7 +74,7 @@ stages :
         organization: 'cambiassorockazuredevsecops'
         scannerMode: 'MSBuild'
         projectKey: 'cambiassorock_TiendaServicios'
-        projectName: 'cambiassorock'
+        projectName: 'TiendaServicios'
   - job: SnykSecurityJob
     steps:
     - bash: echo Empieza Validacion SnykSecurity
