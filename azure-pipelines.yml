@@ -63,9 +63,9 @@ stages :
     - bash: echo $(System.DefaultWorkingDirectory)
     - bash: echo $(Build.ArtifactStagingDirectory)
 
-- stage: ExecuteSonarCloud
+- stage: ExecuteSonarCloudySnykSecurityScan
   jobs:
-  - job: QADeployJob
+  - job: SonarCloudJob
     steps:
     - bash: echo Empieza Validacion SonarCloud
     - task: SonarCloudPrepare@1
@@ -75,7 +75,17 @@ stages :
         scannerMode: 'MSBuild'
         projectKey: 'cambiassorock_TiendaServicios'
         projectName: 'cambiassorock'
-
+  - job: SnykSecurityJob
+    steps:
+    - bash: echo Empieza Validacion SnykSecurity
+    - task: SnykSecurityScan@1
+      inputs:
+        serviceConnectionEndpoint: 'ConexionSnyk'
+        testType: 'app'
+        monitorWhen: 'always'
+        failOnIssues: true
+        organization: '6f035e18-560a-443e-90c4-d66669f19fec'
+    
 - stage: QADeploy
   jobs:
   - job: QADeployJob
