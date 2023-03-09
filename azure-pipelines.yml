@@ -16,36 +16,36 @@ variables:
 
 
 stages :
-- stage: Build
-  jobs:
-  - job: FirtsJob
-    steps:
-    - bash: echo Empieza Build
-    - bash: echo Mi Variable:$(PipeLineLeveVariables)
-    - task: NuGetToolInstaller@1
-    - task: NuGetCommand@2
-      inputs:
-        restoreSolution: '$(solution)'
-    - task: VSBuild@1
-      inputs:
-        solution: '$(solution)'
-        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-    - task: DotNetCoreCLI@2
-      displayName: Test
-      inputs:
-        command: test
-        projects: '$(Parameters.TestProjects)'
-        arguments: '--configuration $(BuildConfiguration)'
-    - task: CopyFiles@2
-      inputs:
-        SourceFolder: '$(System.DefaultWorkingDirectory)'
-        Contents: '**'
-        TargetFolder: '$(Build.ArtifactStagingDirectory)'
-        CleanTargetFolder: true
-        OverWrite: true
-        ignoreMakeDirErrors: true
+# - stage: Build
+#   jobs:
+#   - job: FirtsJob
+#     steps:
+#     - bash: echo Empieza Build
+#     - bash: echo Mi Variable:$(PipeLineLeveVariables)
+#     - task: NuGetToolInstaller@1
+#     - task: NuGetCommand@2
+#       inputs:
+#         restoreSolution: '$(solution)'
+#     - task: VSBuild@1
+#       inputs:
+#         solution: '$(solution)'
+#         msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+#         platform: '$(buildPlatform)'
+#         configuration: '$(buildConfiguration)'
+#     - task: DotNetCoreCLI@2
+#       displayName: Test
+#       inputs:
+#         command: test
+#         projects: '$(Parameters.TestProjects)'
+#         arguments: '--configuration $(BuildConfiguration)'
+#     - task: CopyFiles@2
+#       inputs:
+#         SourceFolder: '$(System.DefaultWorkingDirectory)'
+#         Contents: '**'
+#         TargetFolder: '$(Build.ArtifactStagingDirectory)'
+#         CleanTargetFolder: true
+#         OverWrite: true
+#         ignoreMakeDirErrors: true
 
 - stage: DevDeploy
   dependsOn: Build
@@ -60,6 +60,7 @@ stages :
     - bash: echo $(Build.SourcesDirectory)
     - bash: echo $(System.DefaultWorkingDirectory)
     - bash: echo $(Build.ArtifactStagingDirectory)
+    - bash: dir $(Build.ArtifactStagingDirectory)
     - task: PublishBuildArtifacts@1
       inputs:
         PathtoPublish: '$(Build.ArtifactStagingDirectory)'
