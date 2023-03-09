@@ -48,7 +48,7 @@ stages :
 #         ignoreMakeDirErrors: true
 
 - stage: DevDeploy
-  dependsOn: Build
+  #dependsOn: Build
   jobs:
   - job: DevDeployJob
     steps:
