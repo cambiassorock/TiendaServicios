@@ -50,7 +50,7 @@ stages :
       inputs:
         serviceConnectionEndpoint: 'ConexionSnyk'
         testType: 'app'
-        targetFile: '**/*.sln'
+        targetFile: 'TiendaServicios.sln'
         monitorWhen: 'always'
         failOnIssues: true
         projectName: 'TiendaServicios_Azure'
