@@ -57,13 +57,7 @@ stages :
       inputs:
         script: |	  
           echo "Structure of work folder of this pipeline:"
-          tree $(Agent.WorkFolder)\1 /f
-          echo "Build.ArtifactStagingDirectory:" 
-          echo "$(Build.ArtifactStagingDirectory)"
-          echo "Build.BinariesDirectory:" 
-          echo "$(Build.BinariesDirectory)"
-          echo "Build.SourcesDirectory:"
-          echo "$(Build.SourcesDirectory)"
+          tree $(Build.SourcesDirectory)\1 /f
 
     - task: SnykSecurityScan@1
       inputs:
