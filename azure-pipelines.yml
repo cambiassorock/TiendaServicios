@@ -51,7 +51,7 @@ stages :
       inputs:
         serviceConnectionEndpoint: 'ConexionSnyk'
         testType: 'app'
-        targetFile: '$(build.DefaultWorkingDirectory)\TiendaServicios.sln'
+        targetFile: 'D:\a\1\s\TiendaServicios.sln'
         monitorWhen: 'always'
         failOnIssues: false #true
         #projectName: 'TiendaServicios_Azure'
