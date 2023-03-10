@@ -45,7 +45,7 @@ stages :
         serviceConnectionEndpoint: 'ConexionSnyk'
         testType: 'app'
         monitorWhen: 'always'
-        failOnIssues: false
+        failOnIssues: true
         projectName: 'TiendaServicios_Azure'
         organization: '5759043e-df6e-4931-85e7-906499b01fc5'
 
