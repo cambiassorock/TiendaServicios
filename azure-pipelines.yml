@@ -41,6 +41,20 @@ stages :
         configuration: '$(buildConfiguration)'
     - task: SonarCloudAnalyze@1
 
+    - task: CmdLine@2
+      inputs:
+        script: |	  
+          echo "Structure of work folder of this pipeline:"
+          tree $(build.DefaultWorkingDirectory)\1 /f
+    - task: SnykSecurityScan@1
+      inputs:
+        serviceConnectionEndpoint: 'ConexionSnyk'
+        testType: 'app'
+        monitorWhen: 'always'
+        failOnIssues: true
+        projectName: 'TiendaServicios_Azure'
+        organization: '5759043e-df6e-4931-85e7-906499b01fc5'
+
     - task: DotNetCoreCLI@2
       displayName: Test
       inputs:
@@ -52,21 +66,6 @@ stages :
         SourceFolder: '$(System.DefaultWorkingDirectory)'
         Contents: '**/*.txt'
         TargetFolder: '$(Build.ArtifactStagingDirectory)'
-
-    - task: CmdLine@2
-      inputs:
-        script: |	  
-          echo "Structure of work folder of this pipeline:"
-          tree $(System.DefaultWorkingDirectory)\1 /f
-
-    - task: SnykSecurityScan@1
-      inputs:
-        serviceConnectionEndpoint: 'ConexionSnyk'
-        testType: 'app'
-        monitorWhen: 'always'
-        failOnIssues: true
-        projectName: 'TiendaServicios_Azure'
-        organization: '5759043e-df6e-4931-85e7-906499b01fc5'
 
     - task: PublishBuildArtifacts@1
       inputs:
