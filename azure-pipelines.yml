@@ -40,6 +40,15 @@ stages :
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
     - task: SonarCloudAnalyze@1
+    - task: SnykSecurityScan@1
+      inputs:
+        serviceConnectionEndpoint: 'ConexionSnyk'
+        testType: 'app'
+        monitorWhen: 'always'
+        failOnIssues: false
+        projectName: 'TiendaServicios_Azure'
+        organization: '5759043e-df6e-4931-85e7-906499b01fc5'
+
     - task: DotNetCoreCLI@2
       displayName: Test
       inputs:
