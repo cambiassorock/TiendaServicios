@@ -50,6 +50,7 @@ stages :
       inputs:
         serviceConnectionEndpoint: 'ConexionSnyk'
         testType: 'app'
+        targetFile: '*.csproj'
         monitorWhen: 'always'
         failOnIssues: true
         projectName: 'TiendaServicios_Azure'
