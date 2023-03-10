@@ -57,7 +57,7 @@ stages :
       inputs:
         script: |	  
           echo "Structure of work folder of this pipeline:"
-          tree $(Build.SourcesDirectory)\1 /f
+          tree $(System.DefaultWorkingDirectory)\1 /f
 
     - task: SnykSecurityScan@1
       inputs:
