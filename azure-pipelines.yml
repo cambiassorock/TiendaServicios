@@ -75,21 +75,27 @@ stages :
         scannerMode: 'MSBuild'
         projectKey: 'TiendaServicios_Azure'
         projectName: 'TiendaServicios_Azure'
+
+    - task: VSBuild@1
+      inputs:
+        solution: '$(solution)'
+        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.DefaultWorkingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
+
     - task: SonarCloudAnalyze@1
-    - task: SonarCloudPublish@1
-      inputs:
-        pollingTimeoutSec: '300'
-  - job: SnykSecurityJob
-    steps:
-    - bash: echo Empieza Validacion SnykSecurity
-    - task: SnykSecurityScan@1
-      inputs:
-        serviceConnectionEndpoint: 'ConexionSnyk'
-        testType: 'app'
-        monitorWhen: 'always'
-        failOnIssues: false
-        projectName: 'TiendaServicios_Azure'
-        organization: '5759043e-df6e-4931-85e7-906499b01fc5'
+
+  # - job: SnykSecurityJob
+  #   steps:
+  #   - bash: echo Empieza Validacion SnykSecurity
+  #   - task: SnykSecurityScan@1
+  #     inputs:
+  #       serviceConnectionEndpoint: 'ConexionSnyk'
+  #       testType: 'app'
+  #       monitorWhen: 'always'
+  #       failOnIssues: false
+  #       projectName: 'TiendaServicios_Azure'
+  #       organization: '5759043e-df6e-4931-85e7-906499b01fc5'
       
     
 - stage: QADeploy
