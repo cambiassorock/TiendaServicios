@@ -44,17 +44,18 @@ stages :
     - task: CmdLine@2
       inputs:
         script: |	  
-          echo "Structure of work folder of this pipeline:"
-          tree $(build.DefaultWorkingDirectory)\1 /f
+          echo "Directorio:"
+          tree $(Build.SourcesDirectory)\1 /f
+          echo $(Build.SourcesDirectory)
     - task: SnykSecurityScan@1
       inputs:
         serviceConnectionEndpoint: 'ConexionSnyk'
         testType: 'app'
-        targetFile: 'TiendaServicios.sln'
+        targetFile: 'D:\a\1\s\TiendaServicios.sln'
         monitorWhen: 'always'
         failOnIssues: true
-        projectName: 'TiendaServicios_Azure'
-        organization: '5759043e-df6e-4931-85e7-906499b01fc5'
+        #projectName: 'TiendaServicios_Azure'
+        #organization: '5759043e-df6e-4931-85e7-906499b01fc5'
 
     - task: DotNetCoreCLI@2
       displayName: Test
