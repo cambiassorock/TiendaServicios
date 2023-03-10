@@ -22,6 +22,13 @@ stages :
     steps:
     - bash: echo Empieza Build
     - bash: echo Mi Variable:$(PipeLineLeveVariables)
+    - task: SonarCloudPrepare@1
+      inputs:
+        SonarCloud: 'ConexionSonarCloud'
+        organization: 'cambiassorockazuredevsecops'
+        scannerMode: 'MSBuild'
+        projectKey: 'TiendaServicios_Azure'
+        projectName: 'TiendaServicios_Azure'
     - task: NuGetToolInstaller@1
     - task: NuGetCommand@2
       inputs:
@@ -32,6 +39,7 @@ stages :
         msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.DefaultWorkingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
+    - task: SonarCloudAnalyze@1
     - task: DotNetCoreCLI@2
       displayName: Test
       inputs:
@@ -63,27 +71,19 @@ stages :
     - bash: echo $(System.DefaultWorkingDirectory)
     - bash: echo $(Build.ArtifactStagingDirectory)
 
-- stage: ExecuteSonarCloudySnykSecurityScan
-  jobs:
-  - job: SonarCloudJob
-    steps:
-    - bash: echo Empieza Validacion SonarCloud
-    - task: SonarCloudPrepare@1
-      inputs:
-        SonarCloud: 'ConexionSonarCloud'
-        organization: 'cambiassorockazuredevsecops'
-        scannerMode: 'MSBuild'
-        projectKey: 'TiendaServicios_Azure'
-        projectName: 'TiendaServicios_Azure'
-
-    - task: VSBuild@1
-      inputs:
-        solution: '$(solution)'
-        msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.DefaultWorkingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-
-    - task: SonarCloudAnalyze@1
+# - stage: ExecuteSonarCloudySnykSecurityScan
+#   jobs:
+#   - job: SonarCloudJob
+#     steps:
+#     - bash: echo Empieza Validacion SonarCloud
+#     - task: SonarCloudPrepare@1
+#       inputs:
+#         SonarCloud: 'ConexionSonarCloud'
+#         organization: 'cambiassorockazuredevsecops'
+#         scannerMode: 'MSBuild'
+#         projectKey: 'TiendaServicios_Azure'
+#         projectName: 'TiendaServicios_Azure'
+#     - task: SonarCloudAnalyze@1
 
   # - job: SnykSecurityJob
   #   steps:
